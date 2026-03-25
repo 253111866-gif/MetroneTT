@@ -42,6 +42,13 @@
             color: white;
             flex-shrink: 0;
             overflow-y: auto;
+            /* Transición suave para cuando se oculte/muestre */
+            transition: margin-left 0.3s ease; 
+        }
+
+        /* Clase para ocultar la barra lateral moviéndola a la izquierda */
+        .sidebar.collapsed {
+            margin-left: -230px; 
         }
 
         .sidebar .logo {
@@ -412,7 +419,7 @@
     <div class="main-wrapper">
         <header class="topbar">
             <div class="topbar-left">
-                <i class="fa-solid fa-bars"></i>
+                <i class="fa-solid fa-bars" id="btn-menu"></i>
             </div>
             <div class="user-profile">
                 <img src="https://via.placeholder.com/30" alt="User"> 
@@ -719,6 +726,16 @@
     </div>
 
     <script>
+        // --- CÓDIGO NUEVO PARA EL MENÚ LATERAL ---
+        const btnMenu = document.querySelector('.topbar-left i');
+        const sidebar = document.querySelector('.sidebar');
+
+        // Al hacer clic en las tres rayitas
+        btnMenu.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+        });
+        // ------------------------------------------
+
         const tabHorario = document.getElementById('tab-horario');
         const tabBoleta = document.getElementById('tab-boleta');
         const contentHorario = document.getElementById('content-horario');
