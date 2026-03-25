@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>METRONET - Alumno</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-purple: #5c3066;
+            --sidebar-bg: #222d32;
+            --sidebar-hover: #1e282c;
+            --sidebar-text: #b8c7ce;
+            --bg-body: #ecf0f5;
+            --text-dark: #333;
+            --border-color: #d2d6de;
+            --green-status: #00a65a;
+            --blue-link: #3c8dbc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 230px;
+            background-color: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            color: white;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo {
+            height: 50px;
+            background-color: var(--primary-purple);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        .menu {
+            list-style: none;
+            padding-top: 10px;
+        }
+
+        .menu li {
+            padding: 12px 15px;
+            color: var(--sidebar-text);
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border-left: 3px solid transparent;
+        }
+
+        .menu li:hover {
+            background-color: var(--sidebar-hover);
+            color: white;
+            border-left-color: var(--blue-link);
+        }
+
+        .menu li i {
+            width: 20px;
+            margin-right: 10px;
+        }
+
+        .badge-new {
+            background-color: var(--green-status);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Topbar */
+        .topbar {
+            height: 50px;
+            background-color: var(--primary-purple);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            color: white;
+        }
+
+        .topbar-left i {
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .user-profile img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        /* Content Area */
+        .content-area {
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            overflow-y: auto;
+            height: calc(100vh - 50px);
+        }
+
+        /* --- LEFT COLUMN (Profile Card) --- */
+        .col-left {
+            width: 350px;
+            flex-shrink: 0;
+        }
+
+        .card {
+            background-color: white;
+            border-top: 3px solid var(--blue-link);
+            border-radius: 3px;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 18px;
+            color: #444;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .text-center { text-align: center; }
+        
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #d2d6de;
+            padding: 3px;
+            margin: 0 auto 15px;
+            display: block;
+        }
+
+        .student-name {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .student-id {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .student-career {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .info-list li span { font-weight: normal; }
+
+        .status-active { color: var(--green-status); }
+
+        .progress-bar-container {
+            height: 10px;
+            background-color: #f5f5f5;
+            border-radius: 2px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--green-status);
+            width: 5%;
+        }
+
+        /* --- RIGHT COLUMN (Schedule/Tabs) --- */
+        .col-right {
+            flex-grow: 1;
+            background-color: white;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            border-radius: 3px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            padding-top: 10px;
+            padding-left: 10px;
+        }
+
+        .tab {
+            padding: 10px 15px;
+            color: #444;
+            cursor: pointer;
+            font-size: 14px;
+            border-top: 3px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab i { margin-right: 5px; color: #777; }
+        
+        .tab.active {
+            border-top-color: var(--blue-link);
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid white;
+            background-color: white;
+            font-weight: bold;
+        }
+
+        .tab-content { padding: 20px; overflow-x: auto; }
+
+        /* --- ESTILOS HORARIO --- */
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .schedule-title {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .btn-print {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            background-color: #f4f4f4;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            table-layout: fixed;
+        }
+
+        .calendar-table th, .calendar-table td {
+            border: 1px solid var(--border-color);
+            text-align: center;
+            vertical-align: top;
+            padding: 0;
+            height: 60px; /* Alto de 1 hora */
+            position: relative;
+        }
+
+        .calendar-table th {
+            background-color: #f9f9f9;
+            padding: 8px;
+            height: auto;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .time-col { width: 50px; background-color: #f9f9f9; vertical-align: top; padding-top: 5px !important; color: #555; }
+        
+        /* Contenedores de eventos */
+        .event {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            padding: 4px;
+            color: white;
+            font-size: 11px;
+            text-align: left;
+            overflow: hidden;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+            z-index: 10;
+        }
+
+        /* Colores extraídos de tu imagen */
+        .bg-pink { background-color: #e54c86; }
+        .bg-gray { background-color: #7b8a8f; }
+        .bg-purple { background-color: #77568c; }
+        .bg-light-purple { background-color: #b36ac5; }
+        .bg-yellow { background-color: #f0cd2b; }
+        .bg-blue { background-color: #55acee; }
+        .bg-green { background-color: #57c785; }
+        .bg-light-green { background-color: #92e59d; }
+        .bg-dark-blue { background-color: #5d7b8d; }
+        .bg-coral { background-color: #d86c62; }
+        
+        /* Multiplicadores de altura por hora */
+        .h-1 { height: 60px; }
+        .h-2 { height: 120px; }
+        .h-3 { height: 180px; }
+        .h-4 { height: 240px; }
+
+        /* Línea de tiempo actual */
+        .current-time-line {
+            position: absolute;
+            top: 50%; /* Aprox 1:30 PM */
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: red;
+            z-index: 20;
+        }
+
+        /* --- ESTILOS BOLETA --- */
+        .hidden { display: none !important; }
+        .text-red { color: #d33724 !important; }
+        
+        .boleta-title {
+            color: var(--blue-link);
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        .grades-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .grades-table th {
+            padding: 12px 10px;
+            border-bottom: 2px solid var(--border-color);
+            color: #333;
+            font-weight: bold;
+        }
+
+        .grades-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #f4f4f4;
+            color: #555;
+        }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">METRONET</div>
+        <ul class="menu">
+            <li><i class="fa-solid fa-chart-line"></i> PAES</li>
+            <li><i class="fa-solid fa-users"></i> Comunidad <i class="fa-solid fa-angle-left" style="margin-left:auto; width:auto;"></i></li>
+            <li><i class="fa-solid fa-calendar-alt"></i> Agenda</li>
+            <li><i class="fa-solid fa-stethoscope"></i> Servicio Médico <i class="fa-solid fa-angle-left" style="margin-left:auto; width:auto;"></i></li>
+            <li><i class="fa-solid fa-medal"></i> Becas</li>
+            <li><i class="fa-solid fa-box"></i> Lockers</li>
+            <li><i class="fa-solid fa-clipboard-check"></i> Evaluaciones</li>
+            <li><i class="fa-solid fa-dollar-sign"></i> Caja <i class="fa-solid fa-angle-left" style="margin-left:auto; width:auto;"></i></li>
+            <li><i class="fa-solid fa-dumbbell"></i> GYM <i class="fa-solid fa-angle-left" style="margin-left:auto; width:auto;"></i></li>
+            <li><i class="fa-solid fa-pen-to-square"></i> Encuestas <i class="fa-solid fa-angle-left" style="margin-left:auto; width:auto;"></i></li>
+            <li><i class="fa-solid fa-file-alt"></i> Formularios <span class="badge-new">new</span></li>
+            <li><i class="fa-solid fa-futbol"></i> Talleres</li>
+            <li><i class="fa-solid fa-folder-open"></i> Documentos <i class="fa-solid fa-angle-left" style="margin-left:auto; width:auto;"></i></li>
+        </ul>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-left">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            <div class="user-profile">
+                <img src="https://via.placeholder.com/30" alt="User"> 
+                AXEL RODRIGO JIMENEZ RUIZ <i class="fa-solid fa-shield-halved" style="margin-left:10px;"></i>
+            </div>
+        </header>
+
+        <main class="content-area">
+            
+            <div class="col-left">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-child-reaching"></i> Alumno
+                    </div>
+                    <div class="card-body text-center">
+                        <img src="https://via.placeholder.com/100" alt="Axel Rodrigo" class="profile-img">
+                        <h3 class="student-name">AXEL RODRIGO JIMENEZ RUIZ</h3>
+                        <p class="student-id">253111866</p>
+                        <p class="student-career">Técnico Superior Universitario en Inteligencia Artificial</p>
+                        
+                        <ul class="info-list" style="text-align: left;">
+                            <li class="status-active">Estatus: ACTIVO <i class="fa-regular fa-circle-check"></i></li>
+                            <li>Cuatrimestre: <span>1</span></li>
+                            <li>Grupo: <span>D</span></li>
+                            <li>Promedio Oficial Curricular: <span>9.43</span></li>
+                            <li style="border-bottom: none; padding-bottom: 0;">Porcentaje de avance: <span>5 %</span></li>
+                            <li>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar"></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" style="font-size: 16px;">
+                        <i class="fa-solid fa-tags"></i> Adeudos/Pendientes
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-right">
+                <div class="tabs">
+                    <div class="tab active" id="tab-horario"><i class="fa-regular fa-calendar"></i> Horario</div>
+                    <div class="tab"><i class="fa-regular fa-flag"></i> Anuncios</div>
+                    <div class="tab"><i class="fa-regular fa-folder"></i> Expediente</div>
+                    <div class="tab" id="tab-boleta"><i class="fa-solid fa-book"></i> Boleta</div>
+                    <div class="tab"><i class="fa-solid fa-clock-rotate-left"></i> Historial</div>
+                    <div class="tab"><i class="fa-solid fa-chess-knight"></i> Extracurriculares</div>
+                    <div class="tab"><i class="fa-solid fa-chart-line"></i> Trayectoria</div>
+                </div>
+                
+                <div class="tab-content">
+                    
+                    <div id="content-horario">
+                        <div style="text-align: right; margin-bottom: 10px;">
+                            <a href="#" style="color: var(--blue-link); text-decoration: none; font-size: 13px;">Ver en otra ventana</a>
+                        </div>
+                        
+                        <div class="schedule-header">
+                            <div style="flex-grow:1; text-align:center;">
+                                <h2 class="schedule-title">Horario 1° D - TSU_ITI - ENERO-ABRIL 2026</h2>
+                            </div>
+                            <button class="btn-print">Imprimir</button>
+                        </div>
+
+                        <table class="calendar-table">
+                            <thead>
+                                <tr>
+                                    <th class="time-col" style="border-top-color: transparent; border-left-color: transparent;"></th>
+                                    <th>lun. 23/3</th>
+                                    <th>mar. 24/3</th>
+                                    <th>mié. 25/3</th>
+                                    <th>jue. 26/3</th>
+                                    <th>vie. 27/3</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="time-col">7:00</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><div class="event bg-gray h-3">7:00 - 10:00<br>UD3-14 - INGLÉS I</div></td>
+                                    <td><div class="event bg-light-purple h-2">7:00 - 9:00<br>UD3-14 - Comunicación Y Habilidades Digitales</div></td>
+                                    <td><div class="event bg-gray h-4">7:00 - 11:00<br>UD3-14 - INGLÉS I</div></td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">8:00</td>
+                                    <td><div class="event bg-pink h-2">8:00 - 10:00<br>UD3-Laboratorio De Redes - Fundamentos De Redes</div></td>
+                                    <td><div class="event bg-purple h-2">8:00 - 10:00<br>UD3-14 - Fundamentos Matemáticos</div></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">9:00</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><div class="event bg-yellow h-2">9:00 - 11:00<br>UD3-Multimedia 7 - Fundamentos De Programación</div></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">10:00</td>
+                                    <td><div class="event bg-gray h-2">10:00 - 12:00<br>UD3-14 - INGLÉS I</div></td>
+                                    <td><div class="event bg-gray h-3">10:00 - 1:00<br>UD3-14 - INGLÉS I</div></td>
+                                    <td><div class="event bg-light-purple h-3">10:00 - 1:00<br>UD3-14 - Comunicación Y Habilidades Digitales</div></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">11:00</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><div class="event bg-gray h-3">11:00 - 2:00<br>UD3-14 - INGLÉS I</div></td>
+                                    <td><div class="event bg-dark-blue h-3">11:00 - 2:00<br>UD3-14 - Lógica Computacional</div></td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">12:00</td>
+                                    <td><div class="event bg-purple h-2">12:00 - 2:00<br>UD3-14 - Fundamentos Matemáticos</div></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col"><i></i> 1:00</td>
+                                    <td></td>
+                                    <td><div class="event bg-blue h-1">1:00 - 2:00<br>UD3-14 - Desarrollo Humano Y Valores</div></td>
+                                    <td>
+                                        <div class="event bg-green h-1">1:00 - 2:00<br>UD3-14 - Física</div>
+                                        <div class="current-time-line"></div> </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">2:00</td>
+                                    <td><div class="event bg-purple h-2">2:00 - 4:00<br>UD3-4 - Fundamentos Matemáticos</div></td>
+                                    <td><div class="event bg-green h-2">2:00 - 4:00<br>UD3-5 - Física</div></td>
+                                    <td><div class="event bg-green h-1">2:00 - 3:00<br>UD3-1 - Física</div></td>
+                                    <td><div class="event bg-blue h-3">2:00 - 5:00<br>UD3-5 - Desarrollo Humano Y Valores</div></td>
+                                    <td><div class="event bg-green h-2">2:00 - 4:00<br>UD3-14 - Física</div></td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">3:00</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><div class="event bg-purple h-1">3:00 - 4:00<br>UD3-1 - Fundamentos Matemáticos</div></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">4:00</td>
+                                    <td><div class="event bg-yellow h-2">4:00 - 6:00<br>UD3-Multimedia 7 - Fundamentos De Programación</div></td>
+                                    <td><div class="event bg-light-green h-1">4:00 - 5:00<br>UD3-15 - Tutoría</div></td>
+                                    <td><div class="event bg-pink h-2">4:00 - 6:00<br>UD3-Laboratorio De Redes - Fundamentos De Redes</div></td>
+                                    <td></td>
+                                    <td><div class="event bg-dark-blue h-1">4:00 - 5:00<br>UD3-7 - Lógica Computacional</div></td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">5:00</td>
+                                    <td></td>
+                                    <td><div class="event bg-light-green h-1">5:00 - 6:00<br>UD3-Cubículo Del Profesor / Oficina - Tutoría</div></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">6:00</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><div class="event bg-coral h-2">6:00 - 8:00<br>ECD-Usos Múltiples - Baile Jazz Lirico G3 18:00 a 20:00 hrs.</div></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">7:00</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="content-boleta" class="hidden">
+                        <h2 class="boleta-title">Boleta de calificaciones</h2>
+                        
+                        <table class="grades-table">
+                            <thead>
+                                <tr>
+                                    <th>Cuatrimestre</th>
+                                    <th>Materia</th>
+                                    <th>1er corte</th>
+                                    <th>2do corte</th>
+                                    <th>3er corte</th>
+                                    <th>Faltas</th>
+                                    <th>Promedio</th>
+                                    <th>Tipo de Curso <span class="text-red">*</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Actividades Culturales Y Deportivas I</td>
+                                    <td>10</td>
+                                    <td>10</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td class="text-red">6.67</td>
+                                    <td>N</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Comunicación Y Habilidades Digitales</td>
+                                    <td>9.3</td>
+                                    <td>9.9</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td class="text-red">6.4</td>
+                                    <td>N</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Desarrollo Humano Y Valores</td>
+                                    <td>9.05</td>
+                                    <td>10</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td class="text-red">6.35</td>
+                                    <td>N</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Física</td>
+                                    <td>8.81</td>
+                                    <td>8.45</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td class="text-red">5.75</td>
+                                    <td>N</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Fundamentos De Programación</td>
+                                    <td>9.2</td>
+                                    <td >9.1</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td class="text-red">6.1</td>
+                                    <td>N</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Fundamentos De Redes</td>
+                                    <td>9.30</td>
+                                    <td>9.06</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td class="text-red">6.36</td>
+                                    <td>N</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Fundamentos Matemáticos</td>
+                                    <td>8.61</td>
+                                    <td>8.84</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td class="text-red">5.95</td>
+                                    <td>N</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>INGLÉS I</td>
+                                    <td>8.8</td>
+                                    <td>8.1</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td class="text-red">5.63</td>
+                                    <td>N</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Lógica Computacional</td>
+                                    <td>8.94</td>
+                                    <td>9.46</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td class="text-red">6.13</td>
+                                    <td>N</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const tabHorario = document.getElementById('tab-horario');
+        const tabBoleta = document.getElementById('tab-boleta');
+        const contentHorario = document.getElementById('content-horario');
+        const contentBoleta = document.getElementById('content-boleta');
+
+        // Al hacer clic en Horario
+        tabHorario.addEventListener('click', () => {
+            tabHorario.classList.add('active');
+            tabBoleta.classList.remove('active');
+            contentHorario.classList.remove('hidden');
+            contentBoleta.classList.add('hidden');
+        });
+
+        // Al hacer clic en Boleta
+        tabBoleta.addEventListener('click', () => {
+            tabBoleta.classList.add('active');
+            tabHorario.classList.remove('active');
+            contentBoleta.classList.remove('hidden');
+            contentHorario.classList.add('hidden');
+        });
+    </script>
+</body>
+</html>
